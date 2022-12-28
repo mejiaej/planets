@@ -11,9 +11,16 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { ExceptionsFilter } from '@/core/exceptions/exceptions.filter';
 import { LogInterceptor } from '@/core/interceptors/log.interceptor';
 import { HealthcheckModule } from '@/resources/healthcheck/healthcheck.module';
+import { PlanetModule } from '@/resources/planet/planet.module';
 
 @Module({
-  imports: [CacheModule, ConfigModule, LoggerModule, HealthcheckModule],
+  imports: [
+    CacheModule,
+    ConfigModule,
+    LoggerModule,
+    HealthcheckModule,
+    PlanetModule,
+  ],
   providers: [
     Logger,
     { provide: APP_INTERCEPTOR, useClass: LogInterceptor },

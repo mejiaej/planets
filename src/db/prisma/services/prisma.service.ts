@@ -3,6 +3,18 @@ import { PrismaClient, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
+  constructor() {
+    super({
+      log: [
+        { emit: 'stdout', level: 'query' },
+        { emit: 'stdout', level: 'info' },
+        { emit: 'stdout', level: 'warn' },
+        { emit: 'stdout', level: 'error' },
+      ],
+      errorFormat: 'colorless',
+    });
+  }
+
   async onModuleInit() {
     await this.$connect();
     await this.softDeleteMiddleware();
@@ -54,11 +66,13 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
       if (actions.includes(params.action)) {
         // in case deleted records are not explicitly requested
         // return only non soft-deleted records
-        if (!params.args.where['deleted']) {
+        if (params?.args?.where && !params.args.where['deleted']) {
           params.args.where['deletedAt'] = null;
         }
 
-        delete params.args.where['deleted'];
+        if (params?.args?.where) {
+          delete params.args.where['deleted'];
+        }
       }
 
       return await next(params);

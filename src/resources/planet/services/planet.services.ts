@@ -12,9 +12,9 @@ export class PlanetService {
     private readonly httpService: HttpService,
   ) {}
 
-  async getPlanets(nameParam?: string): Promise<Planet[]> {
+  async getPlanets(nameParam?: string, skip = 0, take = 5): Promise<Planet[]> {
     if (!nameParam) {
-      return this.prismaService.planet.findMany();
+      return this.prismaService.planet.findMany({ skip, take });
     } else {
       const planets = await this.findPlanetByName(nameParam);
       if (planets?.length) {

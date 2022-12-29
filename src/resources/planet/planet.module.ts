@@ -3,7 +3,7 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TerminusModule } from '@nestjs/terminus';
 import { PlanetController } from './controllers/planet.controller';
-import { PlanetService } from './services/planet.services.module';
+import { PlanetService } from './services/planet.services';
 
 @Module({
   imports: [TerminusModule, PrismaModule, HttpModule],

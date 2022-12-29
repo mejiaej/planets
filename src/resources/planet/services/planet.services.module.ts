@@ -27,31 +27,30 @@ export class PlanetService {
 
   private async findPlanetByNameFromAPI(nameParam: string): Promise<Planet[]> {
     const {
-      data: { results },
+      data: { results: apiPlanets },
     } = await firstValueFrom(
       this.httpService.get(`${PLANETS_URL}?search=${nameParam}`),
     );
 
-    if (results?.length) {
-      const insertPlanets = results.map((apiPlanet: any) => {
-        return this.prismaService.planet.create({
-          data: {
-            name: apiPlanet.name,
-            diameter: apiPlanet.diameter,
-            gravity: apiPlanet.gravity,
-            terrain: apiPlanet.terrain,
-            createdAt: apiPlanet.created,
-            updatedAt: apiPlanet.edited,
-          },
-        });
+    if (!apiPlanets?.length) return [];
+
+    const matchedPlanet = apiPlanets.find(
+      (apiPlanet: { name: string }) => apiPlanet.name === nameParam,
+    );
+    if (matchedPlanet) {
+      await this.prismaService.planet.create({
+        data: {
+          name: matchedPlanet.name,
+          diameter: matchedPlanet.diameter,
+          gravity: matchedPlanet.gravity,
+          terrain: matchedPlanet.terrain,
+          createdAt: matchedPlanet.created,
+          updatedAt: matchedPlanet.edited,
+        },
       });
-
-      await Promise.all(insertPlanets);
-
-      return this.findPlanetByName(nameParam);
-    } else {
-      return [];
     }
+
+    return this.findPlanetByName(nameParam);
   }
 
   private async findPlanetByName(nameParam: string): Promise<Planet[]> {

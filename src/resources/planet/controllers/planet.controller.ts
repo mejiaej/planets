@@ -1,5 +1,5 @@
 import { PrismaService } from '@/db/prisma/services/prisma.service';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { PlanetService } from '../services/planet.services.module';
 
@@ -12,8 +12,7 @@ export class PlanetController {
   ) {}
 
   @Get()
-  async planets() {
-    const result = await this.planetService.getUsers({});
-    console.log('result', result);
+  planets(@Query('name') name?: string) {
+    return this.planetService.getPlanets(name);
   }
 }

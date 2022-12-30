@@ -34,6 +34,7 @@ export class PlanetService {
   }
 
   async deleteById(id: number) {
+    await this.getPlanetById(id);
     return this.prismaService.planet.delete({
       where: {
         id,

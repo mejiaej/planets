@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["createMany"]
 }
 
 datasource db {
@@ -27,5 +26,4 @@ model Planet {
   createdAt DateTime
   updatedAt DateTime?
   deletedAt DateTime?
-  deleted   Boolean @default(false)
 }

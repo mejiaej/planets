@@ -1,3 +1,4 @@
+import { AuthGuard } from '@/core/guards/auth.guard';
 import { PrismaService } from '@/db/prisma/services/prisma.service';
 import {
   Controller,
@@ -6,8 +7,15 @@ import {
   Param,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { PlanetService } from '../services/planet.services';
 
 @ApiTags('Planets')
@@ -47,6 +55,8 @@ export class PlanetController {
   }
 
   @Get('/:id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiParam({
     name: 'id',
     description: 'Id of the planet to look for',
@@ -58,6 +68,8 @@ export class PlanetController {
   }
 
   @Delete('/:id')
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth()
   @ApiParam({
     name: 'id',
     description: 'Id of the planet to delete',

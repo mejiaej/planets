@@ -50,6 +50,7 @@ async function bootstrap() {
       .setTitle('Boilerplate API')
       .setDescription('Example docs')
       .setVersion(config.get('npm_package_version') as string)
+      .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('api', app, document);

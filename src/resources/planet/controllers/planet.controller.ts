@@ -1,6 +1,13 @@
 import { PrismaService } from '@/db/prisma/services/prisma.service';
-import { Controller, Get, Query } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
+import { ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { PlanetService } from '../services/planet.services';
 
 @ApiTags('Planets')
@@ -31,11 +38,33 @@ export class PlanetController {
     type: Number,
   })
   @ApiOperation({ summary: 'List all planets, or find one by name' })
-  planets(
+  getPlanets(
     @Query('name') name?: string,
     @Query('skip') skip = '0',
     @Query('take') take = '5',
   ) {
     return this.planetService.getPlanets(name, Number(skip), Number(take));
+  }
+
+  @Get('/:id')
+  @ApiParam({
+    name: 'id',
+    description: 'Id of the planet to look for',
+    required: true,
+    type: Number,
+  })
+  getPlanetById(@Param('id', new ParseIntPipe()) id: number) {
+    return this.planetService.getPlanetById(id);
+  }
+
+  @Delete('/:id')
+  @ApiParam({
+    name: 'id',
+    description: 'Id of the planet to delete',
+    required: true,
+    type: Number,
+  })
+  deletePlanetById(@Param('id', new ParseIntPipe()) id: number) {
+    return this.planetService.deleteById(id);
   }
 }

@@ -25,6 +25,22 @@ export class PlanetService {
     }
   }
 
+  async getPlanetById(id: number): Promise<Planet> {
+    return this.prismaService.planet.findUniqueOrThrow({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async deleteById(id: number) {
+    return this.prismaService.planet.delete({
+      where: {
+        id,
+      },
+    });
+  }
+
   private async findPlanetByNameFromAPI(nameParam: string): Promise<Planet[]> {
     const {
       data: { results: apiPlanets },

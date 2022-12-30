@@ -57,21 +57,29 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
    */
   async filterSoftDeleteMiddleware() {
     this.$use(async (params: Prisma.MiddlewareParams, next) => {
-      const actions = ['findFirst', 'findMany'];
+      const actions = ['findFirst', 'findMany', 'findFirstOrThrow'];
 
       if (params.action === 'findUnique') {
         params.action = 'findFirst';
       }
 
+      // disable error bacuse PrismaAction interface doesn't have the values 'findUniqueOrThrow' && 'findFirstOrThrow'
+      // even though they actually exists
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      if (params.action === 'findUniqueOrThrow') {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        params.action = 'findFirstOrThrow';
+      }
+
       if (actions.includes(params.action)) {
         // in case deleted records are not explicitly requested
         // return only non soft-deleted records
-        if (params?.args?.where && !params.args.where['deleted']) {
+        if (!params.args.where) {
+          params.args.where = { deletedAt: null };
+        } else {
           params.args.where['deletedAt'] = null;
-        }
-
-        if (params?.args?.where) {
-          delete params.args.where['deleted'];
         }
       }
 

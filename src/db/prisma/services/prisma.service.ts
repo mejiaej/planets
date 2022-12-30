@@ -1,16 +1,21 @@
+import { Environment } from '@/config/env/constants';
 import { INestApplication, Injectable, OnModuleInit } from '@nestjs/common';
 import { PrismaClient, Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit {
   constructor() {
-    super({
-      log: [
+    let logs: Array<Prisma.LogDefinition> = [];
+    if (process.env.NODE_ENV === Environment.development) {
+      logs = [
         { emit: 'stdout', level: 'query' },
         { emit: 'stdout', level: 'info' },
         { emit: 'stdout', level: 'warn' },
         { emit: 'stdout', level: 'error' },
-      ],
+      ];
+    }
+    super({
+      log: logs,
       errorFormat: 'colorless',
     });
   }

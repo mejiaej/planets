@@ -16,6 +16,7 @@ import {
   ApiQuery,
   ApiTags,
 } from '@nestjs/swagger';
+import { ListPlanetRequestDto } from '../dto/list-planet-request.dto';
 import { PlanetService } from '../services/planet.services';
 
 @ApiTags('Planets')
@@ -46,12 +47,8 @@ export class PlanetController {
     type: Number,
   })
   @ApiOperation({ summary: 'List all planets, or find one by name' })
-  getPlanets(
-    @Query('name') name?: string,
-    @Query('skip') skip = '0',
-    @Query('take') take = '5',
-  ) {
-    return this.planetService.getPlanets(name, Number(skip), Number(take));
+  getPlanets(@Query() query: ListPlanetRequestDto) {
+    return this.planetService.getPlanets(query.name, query.skip, query.take);
   }
 
   @Get('/:id')

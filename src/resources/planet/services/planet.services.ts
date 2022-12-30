@@ -50,23 +50,31 @@ export class PlanetService {
 
     if (!apiPlanets?.length) return [];
 
-    const matchedPlanet = apiPlanets.find(
+    const matchedPlanet = apiPlanets.some(
       (apiPlanet: { name: string }) => apiPlanet.name === nameParam,
     );
     if (matchedPlanet) {
-      await this.prismaService.planet.create({
-        data: {
-          name: matchedPlanet.name,
-          diameter: matchedPlanet.diameter,
-          gravity: matchedPlanet.gravity,
-          terrain: matchedPlanet.terrain,
-          createdAt: matchedPlanet.created,
-          updatedAt: matchedPlanet.edited,
-        },
+      const insertPlanets = apiPlanets.map((apiPlanet: any) => {
+        // change to .createMany and avoid map/PromiseAll when switching to PostgreSql
+        // SqlLite doesn't support .createMany
+        return this.prismaService.planet.create({
+          data: {
+            name: apiPlanet.name,
+            diameter: apiPlanet.diameter,
+            gravity: apiPlanet.gravity,
+            terrain: apiPlanet.terrain,
+            createdAt: apiPlanet.created,
+            updatedAt: apiPlanet.edited,
+          },
+        });
       });
-    }
 
-    return this.findPlanetByName(nameParam);
+      await Promise.all(insertPlanets);
+
+      return this.findPlanetByName(nameParam);
+    } else {
+      return [];
+    }
   }
 
   private async findPlanetByName(nameParam: string): Promise<Planet[]> {

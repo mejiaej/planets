@@ -1,12 +1,14 @@
 import { PrismaService } from '@/db/prisma/services/prisma.service';
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Planet } from '@prisma/client';
 import { firstValueFrom } from 'rxjs';
 import { PLANETS_URL } from '../planet.constants';
 
 @Injectable()
 export class PlanetService {
+  private readonly logger = new Logger(PlanetService.name);
+
   constructor(
     private prismaService: PrismaService,
     private readonly httpService: HttpService,
@@ -51,6 +53,8 @@ export class PlanetService {
 
     if (!apiPlanets?.length) return [];
 
+    this.logger.debug('apiPlanets', apiPlanets);
+
     const matchedPlanet = apiPlanets.some(
       (apiPlanet: { name: string }) => apiPlanet.name === nameParam,
     );
@@ -79,10 +83,12 @@ export class PlanetService {
   }
 
   private async findPlanetByName(nameParam: string): Promise<Planet[]> {
-    return this.prismaService.planet.findMany({
+    const planets = await this.prismaService.planet.findMany({
       where: {
         name: nameParam,
       },
     });
+    this.logger.debug('findPlanetByName', planets);
+    return planets;
   }
 }

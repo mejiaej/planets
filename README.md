@@ -53,6 +53,17 @@ curl --request DELETE \
 
 returns `404` if not found
 
+### Test
+
+I created integration/e2e tests for the [planet enpoints](https://github.com/mejiaej/planets/blob/main/src/resources/planet/test/planets.e2e-spec.spec.ts).
+
+Run tests
+```
+npm test
+```
+
+BTW, tests are connected to the same database, so running tests might modify the current database. In a real scenario we'll have a separate db for integration test runs.
+
 ## Overview
 
 This is a small take home assignment that aims to have the candidate become familiar with our stack (TypeScript, NestJS, Fastify, Prisma, etc) while assessing their coding skills and standard practices at the same time.

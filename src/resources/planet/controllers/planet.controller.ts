@@ -22,10 +22,7 @@ import { PlanetService } from '../services/planet.services';
 @ApiTags('Planets')
 @Controller('planets')
 export class PlanetController {
-  constructor(
-    private prismaService: PrismaService,
-    private planetService: PlanetService,
-  ) {}
+  constructor(private planetService: PlanetService) {}
 
   @Get()
   @ApiQuery({

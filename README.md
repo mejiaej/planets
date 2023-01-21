@@ -1,3 +1,7 @@
+## Overview
+
+RESTful API that returns a list of Star Wars planets and their information from a local SQLite DB.
+
 ## First steps
 
 - create `.env file` with content:
@@ -102,7 +106,3 @@ npm test
 ```
 
 BTW, tests are connected to the same database, so running tests might modify the current database. In a real scenario we'll have a separate db for integration test runs.
-
-## Overview
-
-RESTful API that returns a list of Star Wars planets and their information from a local SQLite DB.
